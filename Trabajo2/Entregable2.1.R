@@ -49,4 +49,15 @@ facturas <- facturas %>%
                         0)
   )
 
-#4.
+#4.integracion de los datos de clientes con la facturaciona travesd de la llave RUT
+
+#me di cuenta quue en la tabla clientes la columna RUT se llama "RUT Plataforma Sheriff"
+#aqui lo cambio para no tener error
+
+clientes <- clientes %>%
+  rename(Rut = `RUT Plataforma Sheriff`)
+
+#genera una tabla df_cobranza que une ambas tablas por Rut
+
+df_cobranza <- facturas %>%
+  left_join(clientes, by = "Rut")
