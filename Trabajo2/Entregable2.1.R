@@ -16,11 +16,11 @@ library(ggplot2)
 clientes <- read_excel("data/clientes.xlsx")
 facturas <- read_excel("data/facturas.xlsx")
 
+#para saber que contienen las filas y columnas
 glimpse(clientes)
 glimpse(facturas)
+
+#para conocer los encabezados de cada columna 
 names(clientes)
 names(facturas)
 
-setwd("D:/R/Entregable2/trabajo-finanzas-en-r2/Trabajo2")
-getwd()
-git pull()
