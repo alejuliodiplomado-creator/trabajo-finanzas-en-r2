@@ -20,3 +20,6 @@ glimpse(clientes)
 glimpse(facturas)
 names(clientes)
 names(facturas)
+
+setwd("D:/R/Entregable2/trabajo-finanzas-en-r2/Trabajo2")
+getwd()
