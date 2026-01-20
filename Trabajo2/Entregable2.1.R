@@ -23,3 +23,4 @@ names(facturas)
 
 setwd("D:/R/Entregable2/trabajo-finanzas-en-r2/Trabajo2")
 getwd()
+git pull()
