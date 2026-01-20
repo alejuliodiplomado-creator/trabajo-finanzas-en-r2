@@ -1,0 +1,10 @@
+---
+title: "Documentación_Entregable2"
+author: "Alejandra"
+date: "2026-01-20"
+output: html_document
+---
+#Documentacion entregable 2 modulo 5 Finanzas en R
+
+##Desglose de las etapas del producto nimo viable.
+
