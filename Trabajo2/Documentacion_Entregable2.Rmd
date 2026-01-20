@@ -31,3 +31,4 @@ Supuestos:
 Alcance (MVP):
   no envía correos
   no hace modelo predictivo todavía (eso es etapa posterior)
+  
