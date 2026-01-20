@@ -10,3 +10,13 @@ library(readxl)
 library(dplyr)
 library(lubridate)
 library(ggplot2)
+
+#Carga de la data
+
+clientes <- read_excel("data/clientes.xlsx")
+facturas <- read_excel("data/facturas.xlsx")
+
+glimpse(clientes)
+glimpse(facturas)
+names(clientes)
+names(facturas)
