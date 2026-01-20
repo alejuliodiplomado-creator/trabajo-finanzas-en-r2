@@ -6,25 +6,33 @@ output:
   pdf_document: default
   html_document: default
 ---
-# Documentacion entregable 2 modulo 5 Finanzas en R
+# Documentacion entregable 2: Modulo 5 Finanzas en R
 
 ## Desglose de las etapas del producto minimo viable.
 
-Objetivo: generar base de cobranza, estado, días mora y resumen por cliente.
+1. Objetivo: el principal objetivo de producto minimo viable (MVP) es construir una base analitica de cobranzas, que permita identificar el estado de las facturas, calcular dias de mora y gneerar un resumen de riesgo por cliente, a partir de datos operaciones de facturacion y clientes.
 
-Inputs:
-  clientes.xlsx: RUT, RazonSocial (y opcional Mail)
-  facturas.xlsx: RUT, Folio, Emision, Vencimiento, FechaPago, TotalFacturado
+Este MVP busca apoyar la gestion de cobranza, priorizacion de clientes y analisis financiero basico, utilizando herramientras de analisis de datos en R.
 
-Ejecución:
+
+2. Inputs: Se utilizan dos archivos bases en formato excel, donde para mantener la confidencialidad se han modificado los datos de los clientes y montos facturados.
+
+  clientes.xlsx: las principales columnas aqui son RUT, RazonSocial mas el plan de cada clientes. En la medida en que se realizo el scrip note algunas dificultades que se solventaron en el mismo codigo, el RUT de los clientes estaba en una columna con un encabezado diferente "Rut clientes Sheriff" por lo que se cambio a solo "Rut" esto con el fin de no entorpecer el join de las tablas.
+  
+  facturas.xlsx: las principales columnas aqui son RUT, Folio, Emision, Vencimiento, FechaPago, TotalFacturado
+
+Ejecución: se ejecuta un join que une las tablas con el fin de identificar cuales son los clientes con mayor cantidad de morosidad. 
+
   correr mvp_cobranza.R
 
-Outputs:
+Outputs: Como principal objetivo se planteo que esta informacion debia ser revisada y compartida por lo que era necesdario generar output con los resultados, incluyendo un grafico que permite una revision visual rapida.
+
   output/resumen_cobranza.csv
   output/base_cobranza.csv
   output/top10_monto_vencido.png
 
-Supuestos:
+Supuestos: en el archivo de facturacion se incluian datos que nos permiten hhacer dos supuesto. 
+
   fechas en formato dd/mm/yyyy
   si FechaPago existe => Pagado
 
