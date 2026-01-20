@@ -61,3 +61,42 @@ clientes <- clientes %>%
 
 df_cobranza <- facturas %>%
   left_join(clientes, by = "Rut")
+
+#quiero confirmar que no existan datos faltantes en la columna clientes (razon social)
+
+sum(is.na(df_cobranza$Cliente.x))
+
+#5. resumen de riesgo por cliente (output minimo esperado)
+
+resumen <- df_cobranza %>%
+  group_by(Rut, Cliente.x) %>%
+  summarise(
+    NumFacturas = n(),
+    NumVencidas = sum(Estado == "Vencido"),
+    MontoVencido = sum(Total[Estado == "Vencido"], na.rm = TRUE),
+    DiasMoraProm = mean(Dias_Mora[Estado == "Vencido"], na.rm = TRUE),
+    .groups = "drop"
+  )
+
+#6 dado lo anterior el objetivo es visualizar el top 10 de los clientes con mas
+#monto vencido. se debe graficar
+
+top10 <- resumen %>%
+  arrange(desc(MontoVencido)) %>%
+  slice(1:10)
+
+ggplot(top10, aes(x = reorder(Cliente.x, MontoVencido), y = MontoVencido)) +
+  geom_col() +
+  coord_flip() +
+  labs(title = "Top 10 clientes por monto vencido",
+       x = "Cliente", y = "Monto vencido")
+
+#7 como agregado estos resultados deben ser verificados manualemnte por lo que
+#se debe exportar
+
+dir.create("output", showWarnings = FALSE)
+
+write.csv(resumen, "output/resumen_cobranza.csv", row.names = FALSE)
+write.csv(df_cobranza, "output/base_cobranza.csv", row.names = FALSE)
+
+ggsave("output/top10_monto_vencido.png", width = 9, height = 4, dpi = 150)
