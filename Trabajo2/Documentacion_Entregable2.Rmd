@@ -2,9 +2,32 @@
 title: "Documentación_Entregable2"
 author: "Alejandra"
 date: "2026-01-20"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
-#Documentacion entregable 2 modulo 5 Finanzas en R
+# Documentacion entregable 2 modulo 5 Finanzas en R
 
-##Desglose de las etapas del producto nimo viable.
+## Desglose de las etapas del producto minimo viable.
 
+Objetivo: generar base de cobranza, estado, días mora y resumen por cliente.
+
+Inputs:
+  clientes.xlsx: RUT, RazonSocial (y opcional Mail)
+  facturas.xlsx: RUT, Folio, Emision, Vencimiento, FechaPago, TotalFacturado
+
+Ejecución:
+  correr mvp_cobranza.R
+
+Outputs:
+  output/resumen_cobranza.csv
+  output/base_cobranza.csv
+  output/top10_monto_vencido.png
+
+Supuestos:
+  fechas en formato dd/mm/yyyy
+  si FechaPago existe => Pagado
+
+Alcance (MVP):
+  no envía correos
+  no hace modelo predictivo todavía (eso es etapa posterior)
