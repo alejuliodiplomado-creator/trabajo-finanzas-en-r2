@@ -1,0 +1,32 @@
+# Documentacion para el area comercial y cobranzas
+
+En el presente documentos se encontraran con:
+
+  1. ¿Quiénes deben más?
+  2. ¿Cuánto deben?
+  3. ¿Dónde enfoco la gestión hoy?
+
+
+## Top 10 clientes con mayor mora
+
+### Resultados clave para toma de decisiones comerciales
+
+El siguiente gráfico muestra los **10 clientes con mayor monto vencido**, 
+permitiendo priorizar rápidamente la gestión de cobranza.
+
+- Clientes ordenados de mayor a menor deuda
+- Monto expresado en CLP
+- Enfoque inmediato en clientes críticos
+
+knitr::include_graphics("output/top10_monto_vencido.png")
+
+### Interpretación rápida
+
+- Los primeros clientes concentran la mayor exposición de riesgo.
+- La gestión comercial debe priorizar estos RUT antes que el resto de la cartera.
+- El gráfico permite identificar rápidamente dónde enfocar llamadas, correos y acuerdos de pago.
+
+**Uso recomendado:** revisión semanal por parte del área comercial.
+
+
+
