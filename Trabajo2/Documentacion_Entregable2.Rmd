@@ -1,10 +1,10 @@
 ---
-title: "Documentación_Entregable2"
+title: "Documentación_Entregable2_Bases"
 author: "Alejandra"
 date: "2026-01-20"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 # Documentacion entregable 2: Modulo 5 Finanzas en R
 
