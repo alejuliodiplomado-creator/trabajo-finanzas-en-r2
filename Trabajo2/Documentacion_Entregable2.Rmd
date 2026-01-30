@@ -28,7 +28,9 @@ Ejecución: se ejecuta un join que une las tablas con el fin de identificar cual
 Outputs: Como principal objetivo se planteo que esta informacion debia ser revisada y compartida por lo que era necesdario generar output con los resultados, incluyendo un grafico que permite una revision visual rapida.
 
   output/resumen_cobranza.csv
+  
   output/base_cobranza.csv
+  
   output/top10_monto_vencido.png
 
 Supuestos: en el archivo de facturacion se incluian datos que nos permiten hhacer dos supuesto. 
@@ -39,6 +41,12 @@ Supuestos: en el archivo de facturacion se incluian datos que nos permiten hhace
 Alcance (MVP):
   no envía correos
   no hace modelo predictivo todavía (eso es etapa posterior)
+  
+Oportunidades de mojoras: 
+
+  -Incluir tabla con contactos directos de los clientes para facilitar la
+  identificacion y cobranzas.
+  -Inclusion de mas KPI´s para la toma de decicios 
   
   
   

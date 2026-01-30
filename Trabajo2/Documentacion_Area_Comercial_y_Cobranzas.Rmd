@@ -30,3 +30,4 @@ permitiendo priorizar rápidamente la gestión de cobranza.
 ```{r top10-img, echo=FALSE, message=FALSE, warning=FALSE}
 knitr::include_graphics("output/top10_monto_vencido.png")
 
+

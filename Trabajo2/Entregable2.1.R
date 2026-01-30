@@ -4,11 +4,12 @@ library(readxl)
 library(dplyr)
 library(lubridate)
 library(ggplot2)
+library(scales)
 
 #2. Carga de la data
 
-clientes <- read_excel("data/clientes.xlsx")
-facturas <- read_excel("data/facturas.xlsx")
+clientes <- read_excel("Trabajo2/data/clientes.xlsx")
+facturas <- read_excel("Trabajo2/data/facturas.xlsx")
 
 #2.1.para saber que contienen las filas y columnas
 glimpse(clientes)
@@ -85,11 +86,16 @@ top10 <- resumen %>%
   arrange(desc(MontoVencido)) %>%
   slice(1:10)
 
-ggplot(top10, aes(x = reorder(Cliente.x, MontoVencido), y = MontoVencido)) +
-  geom_col() +
-  coord_flip() +
-  labs(title = "Top 10 clientes por monto vencido",
-       x = "Cliente", y = "Monto vencido")
+ggplot(top10, aes(x = MontoVencido, y = Cliente.x)) +
+  geom_col(fill = "grey40") +
+  scale_x_continuous(
+    labels = label_number(big.mark = ".", decimal.mark = ",")
+  ) +
+  labs(
+    title = "Top 10 clientes por monto vencido",
+    x = "Monto vencido",
+    y = "Cliente"
+  )
 
 #7 como agregado estos resultados deben ser verificados manualemnte por lo que
 #se debe exportar
