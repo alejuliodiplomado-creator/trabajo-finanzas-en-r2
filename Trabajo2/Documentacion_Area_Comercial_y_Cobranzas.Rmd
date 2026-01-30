@@ -18,8 +18,6 @@ permitiendo priorizar rápidamente la gestión de cobranza.
 - Monto expresado en CLP
 - Enfoque inmediato en clientes críticos
 
-knitr::include_graphics("output/top10_monto_vencido.png")
-
 ### Interpretación rápida
 
 - Los primeros clientes concentran la mayor exposición de riesgo.
@@ -29,4 +27,6 @@ knitr::include_graphics("output/top10_monto_vencido.png")
 **Uso recomendado:** revisión semanal por parte del área comercial.
 
 
+```{r top10-img, echo=FALSE, message=FALSE, warning=FALSE}
+knitr::include_graphics("output/top10_monto_vencido.png")
 
