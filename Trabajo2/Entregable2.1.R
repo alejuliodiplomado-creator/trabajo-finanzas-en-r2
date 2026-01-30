@@ -102,7 +102,7 @@ ggplot(top10, aes(x = MontoVencido, y = Cliente.x)) +
 
 dir.create("output", showWarnings = FALSE)
 
-write.csv(resumen, "output/resumen_cobranza.csv", row.names = FALSE)
-write.csv(df_cobranza, "output/base_cobranza.csv", row.names = FALSE)
+write.csv(resumen, "Trabajo2/output/resumen_cobranza.csv", row.names = FALSE)
+write.csv(df_cobranza, "Trabajo2/output/base_cobranza.csv", row.names = FALSE)
 
-ggsave("output/top10_monto_vencido.png", width = 9, height = 4, dpi = 150)
+ggsave("Trabajo2/output/top10_monto_vencido.png", width = 9, height = 4, dpi = 150)
