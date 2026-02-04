@@ -1,0 +1,261 @@
+---
+title: "Entrega 3 — Documentación, Despliegue y Monitoreo (Módulo 5: Finanzas en R)"
+author: "Sheriff Chile — Facturación y Cobranzas"
+date: "`r format(Sys.Date(), '%d-%m-%Y')`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    number_sections: true
+    theme: readable
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+---
+
+## 1) Configuración
+
+```{r config}
+# === Rutas (ajusta según tu estructura) ===
+BASE_DIR   <- getwd()
+DATA_DIR   <- file.path(BASE_DIR, "data")
+OUTPUT_DIR <- file.path(BASE_DIR, "output")
+
+# Archivos esperados (MVP)
+ARCH_CLIENTES <- file.path(DATA_DIR, "clientes.xlsx")
+ARCH_FACTURAS <- file.path(DATA_DIR, "facturas.xlsx")
+
+# Script del MVP (Entrega 2)
+# Cambia el nombre si tu archivo se llama distinto:
+SCRIPT_MVP <- file.path(BASE_DIR, "Entregable2.1.R")
+
+# Control: ejecutar o solo documentar
+EJECUTAR_MVP <- FALSE
+
+dir.create(OUTPUT_DIR, showWarnings = FALSE, recursive = TRUE)
+
+suppressPackageStartupMessages({
+  library(readxl)
+  library(dplyr)
+  library(stringr)
+  library(lubridate)
+  library(ggplot2)
+  library(knitr)
+  library(kableExtra)
+  library(DiagrammeR)
+})
+```
+
+---
+
+## 2) Resumen ejecutivo (para evaluación)
+
+**Qué se entrega en la Entrega 3 (esta entrega):**
+
+- **(4) Documentación**: diagrama del proceso + “model card” (adaptada al scoring) + detalle de limpieza/transformación de datos.
+- **(5) Despliegue**: cómo llevarlo a producción (opciones realistas para Sheriff).
+- **(6) Monitoreo**: qué indicadores vigilar, alertas y rutina de revisión.
+
+**Qué NO se implementa aún (alcance MVP actual):**
+- Envío automático de correos desde R (se deja como siguiente iteración).
+- Modelo predictivo avanzado (ML). El “modelo” actual es un **scoring heurístico** (reglas).
+
+---
+
+## 3) Evidencia rápida del MVP (referencia Entrega 2)
+
+### 3.1 Ejecutar el script del MVP (opcional)
+
+```{r ejecutar-mvp, eval=EJECUTAR_MVP}
+source(SCRIPT_MVP)
+```
+
+### 3.2 Archivos de salida esperados
+
+- `output/base_cobranza.csv` (o similar): facturas + estado calculado + días de mora.
+- `output/resumen_cobranza.csv` (o similar): resumen por cliente (vencidas, monto, score, nivel).
+- `output/top10_monto_vencido.png`: gráfico Top 10 clientes por deuda.
+
+> Si los nombres reales son distintos, ajusta aquí.
+
+---
+
+# 4) Documentación del proyecto
+
+## 4.1 Diagrama del proceso (para Bizagi/Visio)
+
+A continuación va un diagrama en **Mermaid** (insertable en HTML).  
+Si necesitas “estilo Bizagi/Visio”, más abajo tienes el paso a paso para replicarlo.
+
+```{r diagrama-mermaid, echo=FALSE}
+DiagrammeR::mermaid("
+flowchart TD
+  A[Inicio / Scheduler Diario] --> B[Lectura de archivos<br/>clientes.xlsx + facturas.xlsx]
+  B --> C[Validación de columnas mínimas]
+  C -->|OK| D[Limpieza / Normalización<br/>RUT, fechas, montos]
+  C -->|Error| C1[Log de errores<br/>y detención controlada]
+  D --> E[Enriquecimiento de datos<br/>Estado calculado, Días mora]
+  E --> F[Construcción de KPIs<br/>Total, Vencido, Aging]
+  E --> G[Resumen por cliente<br/>Num vencidas, Monto vencido, Score]
+  G --> H[Priorización comercial<br/>Top N por deuda/riesgo]
+  F --> I[Outputs]
+  H --> I[Outputs]
+  I --> J[Entrega a Comercial<br/>HTML/CSV/PNG]
+  J --> K[Monitoreo: métricas + alertas]
+  K --> L[Fin]
+")
+```
+
+### Cómo replicarlo en Bizagi/Visio (paso a paso)
+
+1. Crea carriles: **Finanzas/Cobranzas** y **Comercial** (opcional **TI/Data**).
+2. Evento inicio: “Scheduler Diario”.
+3. Tarea: “Cargar clientes.xlsx y facturas.xlsx”.
+4. Gateway: “¿Columnas mínimas presentes?”
+   - No → “Registrar error (log) y detener”.
+   - Sí → seguir.
+5. Tareas: normalizar RUT, convertir fechas, validar montos, calcular estado, días mora, KPIs, resumen por cliente.
+6. Salida: “Generar CSV + gráfico Top 10 + reporte”.
+7. Publicación: “Reporte disponible para Comercial”.
+8. Monitoreo: “Revisar indicadores / alertas”.
+
+---
+
+## 4.2 Limpieza y transformación de datos
+
+### 4.2.1 Inputs y columnas mínimas
+
+**clientes.xlsx** (mínimo):
+- `RUT Plataforma Sheriff` (o equivalente).
+- `RazonSocial` (si no existe, se puede operar solo con RUT).
+- `Mail` (opcional).
+
+**facturas.xlsx** (mínimo):
+- `RUT` (o equivalente).
+- `Folio`
+- `Emision` (dd/mm/yyyy)
+- `Vencimiento` (dd/mm/yyyy)
+- `FechaPago` (vacío/NA si no pagada)
+- `TotalFacturado` (CLP)
+
+### 4.2.2 Transformaciones clave (las que el evaluador espera)
+
+- **Normalización de RUT**: quitar puntos/espacios, estandarizar guion y K (may/min).
+- **Fechas**: lectura con formato chileno (día/mes/año) usando `dmy()` o `as.Date(..., '%d/%m/%Y')`.
+- **Montos**: asegurar numéricos (sin separadores).
+- **Estandarización de nombres**: `rename()` para que ambos archivos compartan `RUT`.
+- **Cálculo**:
+  - `Estado_Calculado` (Pagado / Vencido / Por vencer)
+  - `Dias_Mora` para vencidas
+  - KPIs y resumen por cliente
+
+---
+
+## 4.3 “Model card” adaptada (Vetiver como referencia)
+
+> Aunque Vetiver se usa para modelos ML, aquí aplica como tarjeta del **scoring** (modelo de reglas).
+
+### 4.3.1 Modelo / lógica
+
+- **Tipo**: scoring heurístico.
+- **Objetivo**: priorizar gestión de cobranza (riesgo y monto).
+- **Variables**:
+  - `NumVencidas`
+  - `MontoVencido`
+  - `DiasMoraProm`
+
+**Score (referencia)**:  
+`Score = 2*NumVencidas + (MontoVencido/1.000.000) + 0.02*DiasMoraProm`
+
+**Clasificación**:
+- Bajo / Medio / Alto (por umbrales definidos en el MVP).
+
+### 4.3.2 Uso esperado en negocio
+
+- Comercial ve **Top 10 por monto vencido** (decisión rápida).
+- Cobranzas usa tabla priorizada por **Score / Nivel**.
+
+### 4.3.3 Limitaciones
+
+- No predice probabilidad real de pago, solo prioriza con reglas.
+- Depende de calidad de datos (fechas y pagos correctos).
+
+### 4.3.4 Próximos pasos
+
+- Agregar histórico (DSO, % pago a tiempo).
+- Entrenar un modelo predictivo y versionar con Vetiver.
+
+---
+
+# 5) Despliegue (cómo llevarlo a producción)
+
+## 5.1 Despliegue recomendado (simple)
+
+1. Carpeta compartida con `data/` (clientes y facturas actualizados).
+2. Scheduler (Windows Task Scheduler / cron) ejecuta diario:
+   - `Rscript Entregable2.1.R`
+3. Se generan outputs en `output/` (CSV + PNG + reporte).
+4. Comercial consume el HTML/PNG/CSV.
+
+**Ventajas**: rápido y fácil.  
+**Riesgos**: rutas/permisos; se mitiga con logs y estándares de carpeta.
+
+## 5.2 Alternativa “pro”
+
+- Docker + CI (GitHub Actions).
+- Dashboard (Shiny/Quarto/Power BI).
+
+---
+
+# 6) Monitoreo (cómo controlar la solución)
+
+## 6.1 Salud del proceso
+
+- ¿Corrió sin errores?
+- Tiempo de ejecución.
+- % fechas inválidas.
+- % RUT faltante/no normalizable.
+- Variación brusca del número de facturas procesadas vs día anterior.
+
+## 6.2 Métricas de negocio
+
+- Monto vencido total (tendencia).
+- Aging 0–30 / 31–60 / 61–90 / 90+.
+- Top 10 clientes por deuda (y cambios).
+- Tasa de recuperación (si se integra pago posterior).
+
+## 6.3 Alertas
+
+- Si `MontoVencido` sube > X% semanal → alerta a Finanzas y Comercial.
+- Si `Aging_90+` supera umbral → escalamiento.
+- Si faltan columnas críticas → detener y avisar (evita reportes erróneos).
+
+## 6.4 Rutina de revisión
+
+- Diario: Top 10 + Aging.
+- Semanal: tendencia + efectividad (pagos recuperados).
+- Mensual: recalibrar score/umbrales y revisar datos maestros.
+
+---
+
+## 7) Checklist de entrega (máxima nota)
+
+- [ ] Diagrama del proceso incluido (Mermaid o imagen Bizagi/Visio).
+- [ ] Limpieza/transformación detallada (RUT, fechas, montos, columnas).
+- [ ] Model card (aunque sea scoring heurístico).
+- [ ] Plan de despliegue realista.
+- [ ] Plan de monitoreo (métricas + alertas + rutina).
+- [ ] Referencia a MVP (script + outputs).
+
+---
+
+## Anexo: incluir imagen exportada desde Bizagi/Visio
+
+Si exportas a `output/diagrama.png`:
+
+```{r incluir-diagrama-png, echo=FALSE, eval=FALSE}
+knitr::include_graphics(file.path(OUTPUT_DIR, "diagrama.png"))
+```
