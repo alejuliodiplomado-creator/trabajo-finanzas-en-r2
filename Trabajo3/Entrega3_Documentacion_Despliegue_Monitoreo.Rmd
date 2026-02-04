@@ -19,7 +19,7 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ## 1) Configuración
 
 ```{r config}
-# === Rutas (ajusta según tu estructura) ===
+# === Rutas ===
 BASE_DIR   <- getwd()
 DATA_DIR   <- file.path(BASE_DIR, "data")
 OUTPUT_DIR <- file.path(BASE_DIR, "output")
@@ -29,7 +29,7 @@ ARCH_CLIENTES <- file.path(DATA_DIR, "clientes.xlsx")
 ARCH_FACTURAS <- file.path(DATA_DIR, "facturas.xlsx")
 
 # Script del MVP (Entrega 2)
-# Cambia el nombre si tu archivo se llama distinto:
+
 SCRIPT_MVP <- file.path(BASE_DIR, "Entregable2.1.R")
 
 # Control: ejecutar o solo documentar
@@ -60,7 +60,7 @@ suppressPackageStartupMessages({
 - **(6) Monitoreo**: qué indicadores vigilar, alertas y rutina de revisión.
 
 **Qué NO se implementa aún (alcance MVP actual):**
-- Envío automático de correos desde R (se deja como siguiente iteración).
+- Envío automático de correos desde R.
 - Modelo predictivo avanzado (ML). El “modelo” actual es un **scoring heurístico** (reglas).
 
 ---
@@ -70,16 +70,14 @@ suppressPackageStartupMessages({
 ### 3.1 Ejecutar el script del MVP (opcional)
 
 ```{r ejecutar-mvp, eval=EJECUTAR_MVP}
-source(SCRIPT_MVP)
+source(Entregable2.1)
 ```
 
 ### 3.2 Archivos de salida esperados
 
-- `output/base_cobranza.csv` (o similar): facturas + estado calculado + días de mora.
-- `output/resumen_cobranza.csv` (o similar): resumen por cliente (vencidas, monto, score, nivel).
+- `output/base_cobranza.csv`: facturas + estado calculado + días de mora.
+- `output/resumen_cobranza.csv`: resumen por cliente (vencidas, monto, score, nivel).
 - `output/top10_monto_vencido.png`: gráfico Top 10 clientes por deuda.
-
-> Si los nombres reales son distintos, ajusta aquí.
 
 ---
 
@@ -90,7 +88,9 @@ source(SCRIPT_MVP)
 A continuación va un diagrama en **Mermaid** (insertable en HTML).  
 Si necesitas “estilo Bizagi/Visio”, más abajo tienes el paso a paso para replicarlo.
 
-```{r diagrama-mermaid, echo=FALSE}
+```{r diagrama-mermaid, echo=FALSE, message=FALSE, warning=FALSE}
+library(DiagrammeR)
+
 DiagrammeR::mermaid("
 flowchart TD
   A[Inicio / Scheduler Diario] --> B[Lectura de archivos<br/>clientes.xlsx + facturas.xlsx]
