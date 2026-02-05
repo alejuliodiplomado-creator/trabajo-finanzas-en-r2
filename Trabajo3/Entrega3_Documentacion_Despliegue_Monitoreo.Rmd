@@ -85,42 +85,11 @@ source(Entregable2.1)
 
 ## 4.1 Diagrama del proceso (para Bizagi/Visio)
 
-A continuación va un diagrama en **Mermaid** (insertable en HTML).  
-Si necesitas “estilo Bizagi/Visio”, más abajo tienes el paso a paso para replicarlo.
+A continuación va un diagrama del proceso
 
-```{r diagrama-mermaid, echo=FALSE, message=FALSE, warning=FALSE}
-library(DiagrammeR)
-
-DiagrammeR::mermaid("
-flowchart TD
-  A[Inicio / Scheduler Diario] --> B[Lectura de archivos<br/>clientes.xlsx + facturas.xlsx]
-  B --> C[Validación de columnas mínimas]
-  C -->|OK| D[Limpieza / Normalización<br/>RUT, fechas, montos]
-  C -->|Error| C1[Log de errores<br/>y detención controlada]
-  D --> E[Enriquecimiento de datos<br/>Estado calculado, Días mora]
-  E --> F[Construcción de KPIs<br/>Total, Vencido, Aging]
-  E --> G[Resumen por cliente<br/>Num vencidas, Monto vencido, Score]
-  G --> H[Priorización comercial<br/>Top N por deuda/riesgo]
-  F --> I[Outputs]
-  H --> I[Outputs]
-  I --> J[Entrega a Comercial<br/>HTML/CSV/PNG]
-  J --> K[Monitoreo: métricas + alertas]
-  K --> L[Fin]
-")
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("diagrama_proceso.png")
 ```
-
-### Cómo replicarlo en Bizagi/Visio (paso a paso)
-
-1. Crea carriles: **Finanzas/Cobranzas** y **Comercial** (opcional **TI/Data**).
-2. Evento inicio: “Scheduler Diario”.
-3. Tarea: “Cargar clientes.xlsx y facturas.xlsx”.
-4. Gateway: “¿Columnas mínimas presentes?”
-   - No → “Registrar error (log) y detener”.
-   - Sí → seguir.
-5. Tareas: normalizar RUT, convertir fechas, validar montos, calcular estado, días mora, KPIs, resumen por cliente.
-6. Salida: “Generar CSV + gráfico Top 10 + reporte”.
-7. Publicación: “Reporte disponible para Comercial”.
-8. Monitoreo: “Revisar indicadores / alertas”.
 
 ---
 
@@ -141,7 +110,7 @@ flowchart TD
 - `FechaPago` (vacío/NA si no pagada)
 - `TotalFacturado` (CLP)
 
-### 4.2.2 Transformaciones clave (las que el evaluador espera)
+### 4.2.2 Transformaciones clave
 
 - **Normalización de RUT**: quitar puntos/espacios, estandarizar guion y K (may/min).
 - **Fechas**: lectura con formato chileno (día/mes/año) usando `dmy()` o `as.Date(..., '%d/%m/%Y')`.
@@ -155,8 +124,6 @@ flowchart TD
 ---
 
 ## 4.3 “Model card” adaptada (Vetiver como referencia)
-
-> Aunque Vetiver se usa para modelos ML, aquí aplica como tarjeta del **scoring** (modelo de reglas).
 
 ### 4.3.1 Modelo / lógica
 
@@ -192,7 +159,7 @@ flowchart TD
 
 # 5) Despliegue (cómo llevarlo a producción)
 
-## 5.1 Despliegue recomendado (simple)
+## 5.1 Despliegue recomendado
 
 1. Carpeta compartida con `data/` (clientes y facturas actualizados).
 2. Scheduler (Windows Task Scheduler / cron) ejecuta diario:
@@ -203,7 +170,9 @@ flowchart TD
 **Ventajas**: rápido y fácil.  
 **Riesgos**: rutas/permisos; se mitiga con logs y estándares de carpeta.
 
-## 5.2 Alternativa “pro”
+## 5.2 Alternativa mejorada 
+
+Requiere mayor destresa en el uso de Rstudio.
 
 - Docker + CI (GitHub Actions).
 - Dashboard (Shiny/Quarto/Power BI).
@@ -240,22 +209,3 @@ flowchart TD
 - Mensual: recalibrar score/umbrales y revisar datos maestros.
 
 ---
-
-## 7) Checklist de entrega (máxima nota)
-
-- [ ] Diagrama del proceso incluido (Mermaid o imagen Bizagi/Visio).
-- [ ] Limpieza/transformación detallada (RUT, fechas, montos, columnas).
-- [ ] Model card (aunque sea scoring heurístico).
-- [ ] Plan de despliegue realista.
-- [ ] Plan de monitoreo (métricas + alertas + rutina).
-- [ ] Referencia a MVP (script + outputs).
-
----
-
-## Anexo: incluir imagen exportada desde Bizagi/Visio
-
-Si exportas a `output/diagrama.png`:
-
-```{r incluir-diagrama-png, echo=FALSE, eval=FALSE}
-knitr::include_graphics(file.path(OUTPUT_DIR, "diagrama.png"))
-```
