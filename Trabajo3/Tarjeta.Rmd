@@ -1,0 +1,79 @@
+---
+title: "Motor de KPIs Comerciales y de Cobranzas"
+date: '`r Sys.Date()`'
+output: 
+  html_document
+
+---
+## Uso
+
+El modelo está diseñado para:
+- Apoyar la toma de decisiones del área comercial
+- Priorizar clientes según nivel de deuda y riesgo
+- Automatizar el cálculo de indicadores de cobranza
+
+Usuarios previstos:
+- Equipo Comercial
+- Área de Cobranzas
+- Finanzas
+
+## Usos que no estan contemprados
+
+El modelo no debe utilizarse para:
+- Evaluaciones crediticias formales
+- Decisiones legales o contractuales
+- Predicciones financieras de largo plazo
+
+## Datos de entrada
+
+Fuentes de datos:
+- clientes.xlsx
+- facturas.xlsx
+
+Principales variables:
+- rut
+- fecha_emision
+- monto
+- estado_pago
+
+## Limpieza y transformacion
+
+Las principales transformaciones incluyen:
+- Normalización del RUT
+- Conversión de fechas a formato estándar
+- Limpieza de montos
+- Eliminación de duplicados
+
+## Reglas que sigue el modelo
+
+El modelo calcula indicadores como:
+- Total facturado
+- Monto vencido
+- Antigüedad de deuda (aging)
+- Priorización de clientes por riesgo
+
+## Outputs
+
+El modelo genera:
+- Reporte resumen por cliente
+- KPIs agregados
+- Archivos CSV / HTML
+
+## Evaluation
+
+La validación se realiza mediante:
+- Revisión de consistencia de resultados
+- Comparación con reportes históricos
+- Validaciones de totales y conteos
+
+## Limitations
+
+- Dependencia de la calidad de los datos de entrada
+- No considera información externa
+- Sensible a errores de carga de archivos
+
+## Monitoreo
+
+- Revisión periódica de resultados
+- Monitoreo de errores de ejecución
+- Actualización del modelo ante cambios de negocio

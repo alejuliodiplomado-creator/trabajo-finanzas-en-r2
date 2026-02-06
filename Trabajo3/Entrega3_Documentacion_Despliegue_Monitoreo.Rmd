@@ -85,12 +85,16 @@ source(Entregable2.1)
 
 ## 4.1 Diagrama del proceso (para Bizagi/Visio)
 
-A continuación va un diagrama del proceso
+El siguiente diagrama representa el flujo operativo del sistema: 
 
 ```{r, echo=FALSE, out.width="100%"}
 knitr::include_graphics("diagrama_proceso.png")
 ```
 
+Este diagrama permite visualizar de forma sencilla los pasos internos que se siguen para
+la obtencion de los output necesarios para la toma de decisiones. Destaca la necesidad 
+de tener "columnas minimas" como por ejemplo las que identifican a los clientes y las fechas de emision
+de las facturas.
 ---
 
 ## 4.2 Limpieza y transformación de datos
@@ -196,16 +200,24 @@ Requiere mayor destresa en el uso de Rstudio.
 - Top 10 clientes por deuda (y cambios).
 - Tasa de recuperación (si se integra pago posterior).
 
-## 6.3 Alertas
+## 6.3 Alertas (posible futura implementacion)
 
 - Si `MontoVencido` sube > X% semanal → alerta a Finanzas y Comercial.
 - Si `Aging_90+` supera umbral → escalamiento.
 - Si faltan columnas críticas → detener y avisar (evita reportes erróneos).
+
 
 ## 6.4 Rutina de revisión
 
 - Diario: Top 10 + Aging.
 - Semanal: tendencia + efectividad (pagos recuperados).
 - Mensual: recalibrar score/umbrales y revisar datos maestros.
+
+## 6.5 Registro Histórico (posible futura implementacion)
+
+Los resultados de cada ejecución pueden almacenarse para:
+- Auditoría
+- Análisis histórico
+- Mejora continua del modelo
 
 ---
