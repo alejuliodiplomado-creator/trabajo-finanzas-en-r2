@@ -181,6 +181,18 @@ Requiere mayor destresa en el uso de Rstudio.
 - Docker + CI (GitHub Actions).
 - Dashboard (Shiny/Quarto/Power BI).
 
+Se desarrolló una aplicación Shiny preliminar que consume directamente el archivo
+`resumen_cobranza.csv`, generado por el procesos anteriores (Entrega2).
+
+La aplicación permite filtrar clientes por nivel de riesgo y días de mora,
+visualizar indicadores agregados y explorar la relación entre mora promedio
+y monto vencido, facilitando el análisis por parte de usuarios no técnicos.
+Todo lo anterior de forma mas didactica y atractiva, ya que, se despligan opciones para 
+seleccionar el nivel de riesgo, una barra para la selecciopn de dias de mora, indicadores
+generales (cantidad de clientes, monto vencido y mora promedio), una lista con el detalle 
+de los clientes un grafico que permite visualizar la mora vs el monto vencido
+(parte inferior de la p)
+
 ---
 
 # 6) Monitoreo (cómo controlar la solución)
